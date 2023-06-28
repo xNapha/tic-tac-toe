@@ -10,6 +10,7 @@
 ## Purpose
 To create tic tac toe CLI game.
 To practise and implement my knowledge of Rust.
+For educational purposes I will be trying to implement as many techniques of rust as I can regardless if it is efficent or not.
 
 ---
 
@@ -26,12 +27,15 @@ Recreation of tic tac toe in the cli
 
 ---
 
-<!-- ## Features
+## Features
 
--   What features does the project have?
--   list them...
+3x3 board
+User will be prompted to enter co ordinates, e.g. (A:2, B:3)
+Rematch , reset scores and exit options
+Score tracker
 
---- -->
+
+---
 
 <!-- ## Known issues
 
@@ -40,15 +44,19 @@ Recreation of tic tac toe in the cli
 
 --- -->
 
-<!-- ## Future Goals
+## Future Goals
 
--   What are the immediate features you'd add given more time
+- Allow users to customise there names instead of player 1 and player 2.
+- Make an Omok version, 19x19 board 5 in a row wins
 
---- -->
+---
 
 ## Change logs
 
 ### 28/08/2023 | Project Creation
+ Start of the project was a little bit bump, even though i read the documentation and followed along with the [lessons](https://doc.rust-lang.org/book/). I still had trouble figuring out the syntax, luckily the compiler was very helpful in telling me what I have to change inorder to make it compile. This just further solidifies the fact that I need to practise anything to fully understand the concepts, because just reading the theory and doing some code alongs dont cement the ideas properly.
+
+ Other than syntax I have having a quite enjoyable time creating a rust program.
 
 ---
 
