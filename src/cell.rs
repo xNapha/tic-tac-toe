@@ -15,5 +15,4 @@ impl Cell {
             display: ' ',
         }
     }
-    pub fn player() {}
 }

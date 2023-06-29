@@ -1,7 +1,7 @@
 use crate::cell::*;
-use crate::player::*;
 pub struct GameBoard {
     pub state: [[Cell; 3]; 3],
+    pub scores: [i32; 2],
 }
 
 impl GameBoard {
@@ -12,6 +12,7 @@ impl GameBoard {
                 [Cell::new(), Cell::new(), Cell::new()],
                 [Cell::new(), Cell::new(), Cell::new()],
             ],
+            scores: [0, 0],
         }
     }
 }
@@ -28,5 +29,5 @@ pub fn display(board: &mut GameBoard) {
 }
 
 pub fn checkWin(board: &GameBoard) -> bool {
-    true
+    false
 }
