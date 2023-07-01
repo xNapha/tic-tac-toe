@@ -64,6 +64,12 @@ User will be prompted to enter co ordinates, e.g. (A:2, B:3)
 
  Initally I had been returning and using a bool value for the is_valid variable, but I wanted to practise using enums and the match operator. So I changed the placePiece function to return an enum which I feel allows me for more customisation when returning the function. Before I had only two options, but now I can have as many as I want allowing me to scale the program. 
 
+ ### 01/07/2023 |  Check win function, changing from bool to enums
+
+ Completed the check win function, but it feels a little bit too verbose. I wonder if there is a way for me to check it without creating several references to the board state. But other than it being too verbose, it works i just dont know how efficient it is.
+
+ I have also changed all the bools that where checking for certain conditions to enum's for the same reasons as stated on the 29th.
+
 ---
 
 <!-- ## What did you struggle with?
