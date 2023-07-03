@@ -7,36 +7,39 @@ use crate::player::*;
 fn main() {
     'application_start: loop {
         let mut board = GameBoard::new();
-        let mut player_type = PlayerKind::Crosses;
-        let mut is_game_won = false;
-        let mut counter = 9;
-        while !is_game_won {
-            display(&mut board);
-            let is_valid = place_piece(&mut board, &player_type);
-            match is_valid {
-                PlayerTurnKind::InvalidMove => continue,
-                PlayerTurnKind::ExitGame => {
-                    break 'application_start;
+        let mut current_player = PlayerKind::Crosses;
+        'curr_game: loop {
+            println!(" |P1: {}|", board.scores[0]);
+            println!(" |P2: {}|", board.scores[1]);
+            let mut counter = 9;
+            'curr_round: loop {
+                display(&board);
+                let is_valid = place_piece(&mut board, &current_player);
+
+                match is_valid {
+                    PlayerTurnKind::InvalidMove => continue,
+                    PlayerTurnKind::ExitGame => break 'application_start,
+                    PlayerTurnKind::RestartBoard => break 'curr_round,
+                    PlayerTurnKind::ResetGame => continue 'application_start,
+                    _ => (),
                 }
-                PlayerTurnKind::RestartGame => {
-                    break;
+
+                if check_win(&board) {
+                    display(&board);
+                    board.increase_score(&current_player);
+                    println!("Congrats on the win");
+                    break 'curr_round;
                 }
-                _ => (),
+
+                current_player = switch_player(current_player);
+                counter -= 1;
+
+                if counter == 0 {
+                    println!("Draw!");
+                    break 'curr_round;
+                }
             }
-            is_game_won = check_win(&board);
-            player_type = match player_type {
-                PlayerKind::Crosses => PlayerKind::Noughts,
-                PlayerKind::Noughts => PlayerKind::Crosses,
-            };
-            counter -= 1;
-            if counter == 0 && !is_game_won {
-                println!("Draw!");
-            }
-        }
-        if is_game_won {
-            display(&mut board);
-            println!("Congrats on the win");
-            break;
+            board = board.new_board();
         }
     }
 }

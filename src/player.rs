@@ -13,7 +13,8 @@ pub enum PlayerTurnKind {
     InvalidMove,
     ValidMove,
     ExitGame,
-    RestartGame,
+    RestartBoard,
+    ResetGame,
 }
 
 pub struct Coordinates {
@@ -33,17 +34,16 @@ pub fn place_piece(board: &mut GameBoard, player: &PlayerKind) -> PlayerTurnKind
     if input.to_lowercase().contains("exit") {
         println!("Have a good day.");
         return PlayerTurnKind::ExitGame;
-    }
-
-    if input.to_lowercase().contains("restart") {
+    } else if input.to_lowercase().contains("restart") {
+        println!("Resetting scores.");
+        return PlayerTurnKind::ResetGame;
+    } else if input.to_lowercase().contains("restart") {
         println!("Restarting...");
-        return PlayerTurnKind::RestartGame;
-    }
-
-    if !input.contains(":") {
+        return PlayerTurnKind::RestartBoard;
+    } else if !input.contains(":") {
         println!("Please seperate the coordinates with a ':'");
         return PlayerTurnKind::InvalidMove;
-    }
+    };
 
     let input: Vec<&str> = input.trim().split(":").collect();
 
@@ -51,7 +51,7 @@ pub fn place_piece(board: &mut GameBoard, player: &PlayerKind) -> PlayerTurnKind
 
     if input.pos_x == 9 || input.pos_y == 9 {
         return PlayerTurnKind::InvalidMove;
-    }
+    };
 
     check_cell_state(board, input, player)
 }
@@ -71,10 +71,10 @@ fn new_coordinates_struct(input: Vec<&str>) -> Coordinates {
                 9
             }
         },
-        pos_y: match input[0] {
-            "a" | "A" => 0,
-            "b" | "B" => 1,
-            "c" | "C" => 2,
+        pos_y: match input[0].to_lowercase().as_str() {
+            "a" => 0,
+            "b" => 1,
+            "c" => 2,
             other => {
                 println!("invalid y coordinate");
                 println!(
@@ -93,30 +93,21 @@ fn check_cell_state(
     player: &PlayerKind,
 ) -> PlayerTurnKind {
     match &board.state[input.pos_x][input.pos_y].state {
-        StateKind::Noughts => {
-            println!("Cell has already been filled, please try again");
-            return PlayerTurnKind::InvalidMove;
-        }
-        StateKind::Crosses => {
-            println!("Cell has already been filled, please try again");
-            return PlayerTurnKind::InvalidMove;
-        }
-        StateKind::Empty => {
-            if input.pos_x == 4 || input.pos_y == 4 {
-                return PlayerTurnKind::InvalidMove;
+        StateKind::Empty => match player {
+            PlayerKind::Crosses => {
+                board.state[input.pos_x][input.pos_y].state = StateKind::Crosses;
+                board.state[input.pos_x][input.pos_y].display = 'X';
+                return PlayerTurnKind::ValidMove;
             }
-            match player {
-                PlayerKind::Crosses => {
-                    board.state[input.pos_x][input.pos_y].state = StateKind::Crosses;
-                    board.state[input.pos_x][input.pos_y].display = 'X';
-                    return PlayerTurnKind::ValidMove;
-                }
-                PlayerKind::Noughts => {
-                    board.state[input.pos_x][input.pos_y].state = StateKind::Noughts;
-                    board.state[input.pos_x][input.pos_y].display = 'O';
-                    return PlayerTurnKind::ValidMove;
-                }
+            PlayerKind::Noughts => {
+                board.state[input.pos_x][input.pos_y].state = StateKind::Noughts;
+                board.state[input.pos_x][input.pos_y].display = 'O';
+                return PlayerTurnKind::ValidMove;
             }
+        },
+        _ => {
+            println!("That cell has already been filled, please try again");
+            return PlayerTurnKind::InvalidMove;
         }
     }
 }
