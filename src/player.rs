@@ -4,6 +4,7 @@ use crate::board::GameBoard;
 
 use crate::cell::StateKind;
 
+#[derive(Copy, Clone)]
 pub enum PlayerKind {
     Noughts,
     Crosses,
@@ -18,11 +19,12 @@ pub enum PlayerTurnKind {
 }
 
 pub struct Coordinates {
-    pos_x: usize,
-    pos_y: usize,
+    pub pos_x: usize,
+    pub pos_y: usize,
 }
 
-pub fn place_piece(board: &mut GameBoard, player: &PlayerKind) -> PlayerTurnKind {
+pub fn place_piece(board: &mut GameBoard) -> PlayerTurnKind {
+    let player = board.current_player();
     println!("Place piece at (e.g. A:2 or b:1):");
 
     let mut input = String::new();
@@ -34,7 +36,7 @@ pub fn place_piece(board: &mut GameBoard, player: &PlayerKind) -> PlayerTurnKind
     if input.to_lowercase().contains("exit") {
         println!("Have a good day.");
         return PlayerTurnKind::ExitGame;
-    } else if input.to_lowercase().contains("restart") {
+    } else if input.to_lowercase().contains("reset") {
         println!("Resetting scores.");
         return PlayerTurnKind::ResetGame;
     } else if input.to_lowercase().contains("restart") {
@@ -90,18 +92,23 @@ fn new_coordinates_struct(input: Vec<&str>) -> Coordinates {
 fn check_cell_state(
     board: &mut GameBoard,
     input: Coordinates,
-    player: &PlayerKind,
+    player: PlayerKind,
 ) -> PlayerTurnKind {
-    match &board.state[input.pos_x][input.pos_y].state {
+    let x = input.pos_x;
+    let y = input.pos_y;
+    let current_cell = &board.state()[x][y].state();
+    match current_cell {
         StateKind::Empty => match player {
             PlayerKind::Crosses => {
-                board.state[input.pos_x][input.pos_y].state = StateKind::Crosses;
-                board.state[input.pos_x][input.pos_y].display = 'X';
+                let mut new_cell = board.state()[x][y];
+                new_cell.update_cell(StateKind::Crosses, 'X');
+                board.set_cell(x, y, new_cell);
                 return PlayerTurnKind::ValidMove;
             }
             PlayerKind::Noughts => {
-                board.state[input.pos_x][input.pos_y].state = StateKind::Noughts;
-                board.state[input.pos_x][input.pos_y].display = 'O';
+                let mut new_cell = board.state()[x][y];
+                new_cell.update_cell(StateKind::Noughts, 'O');
+                board.set_cell(x, y, new_cell);
                 return PlayerTurnKind::ValidMove;
             }
         },
