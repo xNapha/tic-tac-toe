@@ -24,16 +24,16 @@ fn main() {
                     PlayerTurnKind::RestartBoard => break 'curr_round,
                     PlayerTurnKind::ResetGame => continue 'application_start,
                     _ => {
+                        if board.check_win() {
+                            println!("{}", board.display());
+                            board.increase_score(&board.current_player());
+                            println!("Congrats on the win");
+                            break 'curr_round;
+                        }
+
                         board.set_other_player();
                         counter -= 1;
                     }
-                }
-
-                if board.check_win() {
-                    println!("{}", board.display());
-                    board.increase_score(&board.current_player());
-                    println!("Congrats on the win");
-                    break 'curr_round;
                 }
 
                 if counter == 0 {
